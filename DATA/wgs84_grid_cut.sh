@@ -24,8 +24,10 @@ gdalwarp -overwrite -s_srs EPSG:2154 -t_srs EPSG:4326 -tr 0.00001 -0.00001 "${pr
 #east="6:11:00E"
 
 #Zone 1
-#north="45:45:00N" #11
+#north="45:57:99N" #11
+#south="45:45:00N" #11
 #west="6:07:00E" #4
+#east="6:12:00E" #4
 
 #Zone 2
 north="46:03:00N" #3
@@ -39,9 +41,31 @@ tr_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${east}")
 bl_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${west}")
 br_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${east}")
 
+round() {
+  echo $(printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc))
+};
+
 # Computing chunks:
-x_step_max=7
-y_step_max=3
+IFS=' '
+deltas=$(GeoConvert -g -p 4 -w --input-string "${north}-${south} ${east}-${west}")
+read -r -a array <<< "${deltas}"
+dWE=${array[0]}
+dSN=${array[1]}
+
+IFS=':'
+read -r -a arrayWE <<< "${dWE}"
+read -r -a arraySN <<< "${dSN}"
+ddegWE=${arrayWE[0]}
+dminWE=${arrayWE[1]}
+dsecWE=${arrayWE[2]::-1}
+ddegSN=${arraySN[0]}
+dminSN=${arraySN[1]}
+dsecSN=${arraySN[2]::-1}
+
+#x_step_max=7
+#y_step_max=3
+x_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dWE}"))
+y_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dSN}"))
 # north axis
 for (( y=0; y<=${y_step_max}; y++ )); do 
 #for y in {0..y_step_max}; do
