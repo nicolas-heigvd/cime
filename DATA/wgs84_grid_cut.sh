@@ -71,18 +71,14 @@ y_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dSN} - 1"))
 for (( y=0; y<=${y_step_max}; y++ )); do 
     ybl="+0:${y}:0"; #
     ytr="+0:$((y+1)):0"; #
-    ytl="-0:${y}:0";
-    ybr="-0:$((y+1)):0";
     # east axis
     for (( x=0; x<=${x_step_max}; x++ )); do 
         xbl="+0:${x}:0"; #
         xtr="+0:$((x+1)):0"; #
-        xtl="+0:${x}:0"; # same dir as the opposite!
-        xbr="+0:$((x+1)):0"; # same dir as the opposite!
         bl=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xbl}") #
         tr=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xtr}") #
-        br=$(GeoConvert -g -p 4 -w --input-string "${north}${ybr} ${west}${xtr}")
-        tl=$(GeoConvert -g -p 4 -w --input-string "${north}${ytl} ${west}${xbl}")
+        tl=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xbl}")
+        br=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xtr}")
         bbox=${bl}" "${tr}
         bbox_str=$(echo ${bl}"_"${tr} | sed "s/ /_/g")
         bbox_str2=$(echo ${tl}"_"${br} | sed "s/ /_/g")
