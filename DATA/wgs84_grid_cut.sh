@@ -43,6 +43,7 @@ else
     echo "Wrong area!"
 fi
 
+echo "Processing zone ${1}..."
 mkdir -p ${zonedir}
 
 #Computing decimal coordinates of the 4 bbox corners:
