@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+
+  tin-terrain:
+      restart: "no"
+      container_name: "tin-terrain"
+      image: "tin-terrain:latest"
+      volumes:
+          - "./:/data:cached"
+      command: >
+          bash -c "/data/geotiff2obj.sh 1
+          && /data/geotiff2obj.sh 2"
+
+
