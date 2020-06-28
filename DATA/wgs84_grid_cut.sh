@@ -26,6 +26,8 @@ gdalwarp -overwrite -s_srs EPSG:2154 -t_srs EPSG:4326 -tr 0.00001 -0.00001 "${pr
 if [ ${1} = "1" ]
 then
     #Zone 1
+    zonedir="${processed_dir}/ZONE${1}"
+    
     north="45:57:99N" #11
     south="45:45:00N" #11
     west="6:07:00E" #4
@@ -33,6 +35,7 @@ then
 elif [ ${1} = "2" ]
 then
     #Zone 2
+    zonedir="${processed_dir}/ZONE${1}"
     north="46:03:00N" #3
     south="45:59:00N" #3
     west="6:18:00E" #7
@@ -40,6 +43,8 @@ then
 else
     echo "Wrong area!"
 fi
+
+mkdir -p ${zonedir}
 
 #Computing decimal coordinates of the 4 bbox corners:
 tl_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${west}")
@@ -97,8 +102,8 @@ for (( y=0; y<=${y_step_max}; y++ )); do
        echo "Tiling bbox: ${bbox}..."
        echo "${processed_dir}"output_4326_"${bbox_str}".tiff
        echo "${processed_dir}/2/"output_4326_"${bbox_str2}".tiff
-       gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${processed_dir}"output_4326_"${bbox_str}".tiff
-       gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${processed_dir}2/"output_4326_"${bbox_str2}".tiff
+       gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
+       gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}/2/"output_4326_"${bbox_str2}".tiff
     done
 done
 
