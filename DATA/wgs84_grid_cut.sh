@@ -23,17 +23,23 @@ gdalwarp -overwrite -s_srs EPSG:2154 -t_srs EPSG:4326 -tr 0.00001 -0.00001 "${pr
 #north="45:54:00N"
 #east="6:11:00E"
 
-#Zone 1
-#north="45:57:99N" #11
-#south="45:45:00N" #11
-#west="6:07:00E" #4
-#east="6:12:00E" #4
-
-#Zone 2
-north="46:03:00N" #3
-south="45:59:00N" #3
-west="6:18:00E" #7
-east="6:26:00E" #7
+if [ ${1} = "1" ]
+then
+    #Zone 1
+    north="45:57:99N" #11
+    south="45:45:00N" #11
+    west="6:07:00E" #4
+    east="6:12:00E" #4
+elif [ ${1} = "2" ]
+then
+    #Zone 2
+    north="46:03:00N" #3
+    south="45:59:00N" #3
+    west="6:18:00E" #7
+    east="6:26:00E" #7
+else
+    echo "Wrong area!"
+fi
 
 #Computing decimal coordinates of the 4 bbox corners:
 tl_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${west}")
