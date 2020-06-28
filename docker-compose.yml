@@ -8,8 +8,6 @@ services:
       image: "tin-terrain:latest"
       volumes:
           - "./:/data:cached"
-      command: >
-          bash -c "/data/geotiff2obj.sh 1
-          && /data/geotiff2obj.sh 2"
-
+      working_dir: "/data"
+      entrypoint: "/data/entrypoint.sh"
 

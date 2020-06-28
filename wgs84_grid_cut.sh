@@ -1,16 +1,17 @@
 #!/bin/bash
-base_dir="./DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
-processed_dir="./DATA/PROCESSED/"
+
+data_dir=$(pwd)"/DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
+processed_dir=$(pwd)"/DATA/PROCESSED/"
 
 compute_base=false
 if [ ${compute_base} = 'true' ]
 then
-echo "Build VRT"
-gdalbuildvrt "${processed_dir}"output.vrt -overwrite "${base_dir}"*.asc
-echo "Convert to GTiff"
-gdal_translate -of GTiff "${processed_dir}"output.vrt "${processed_dir}"output.tiff
-echo "Warp to WGS84"
-gdalwarp -overwrite -s_srs EPSG:2154 -t_srs EPSG:4326 -tr 0.00001 -0.00001 "${processed_dir}"output.tiff "${processed_dir}"output_4326.tiff
+    echo "Build VRT"
+    gdalbuildvrt "${processed_dir}"output.vrt -overwrite "${data_dir}"*.asc
+    echo "Convert to GTiff"
+    gdal_translate -of GTiff "${processed_dir}"output.vrt "${processed_dir}"output.tiff
+    echo "Warp to WGS84"
+    gdalwarp -overwrite -s_srs EPSG:2154 -t_srs EPSG:4326 -tr 0.00001 -0.00001 "${processed_dir}"output.tiff "${processed_dir}"output_4326.tiff
 fi
 
 ## Zone 1
