@@ -27,7 +27,6 @@ if [ ${1} = "1" ]
 then
     #Zone 1
     zonedir="${processed_dir}/ZONE${1}"
-    
     north="45:57:99N" #11
     south="45:45:00N" #11
     west="6:07:00E" #4
@@ -51,10 +50,6 @@ tl_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${west}")
 tr_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${east}")
 bl_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${west}")
 br_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${east}")
-
-round() {
-  echo $(printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc))
-};
 
 # Computing chunks:
 IFS=' '
