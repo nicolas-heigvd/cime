@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]
+if [ $# -eq 1 ]
 then
-    basedir="./DATA/PROCESSED/"
+    basedir="/data/DATA/PROCESSED/"
     mkdir -p "${basedir}"ZONE${1}/OBJ/
 
     for f0 in "${basedir}"ZONE${1}/output_4326_*.tiff; do
