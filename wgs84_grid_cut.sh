@@ -8,7 +8,7 @@ processed_dir=$(pwd)"/DATA/PROCESSED/"
 find ${data_dir1} -type f -iname *.asc > ${processed_dir}/input_files;
 find ${data_dir2} -type f -iname *.asc >> ${processed_dir}/input_files;
 
-compute_base=false
+compute_base=true
 if [ ${compute_base} = 'true' ]
 then
     echo "Build VRT"
@@ -93,8 +93,8 @@ for (( y=0; y<=${y_step_max}; y++ )); do
         echo "Tiling sub-bbox: ${bbox}..."
         echo "${zone_dir}"output_4326_"${bbox_str}".tiff
         echo "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
-        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
-        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}2/"output_4326_"${bbox_str3}".tiff
+        #gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
+        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"tile_WGS84_"${bbox_str3}".tiff
     done
 done
 
