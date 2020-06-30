@@ -1,13 +1,18 @@
 #!/bin/bash
 
-data_dir=$(pwd)"/DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
+data_dir1=$(pwd)"/DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
+data_dir2=$(pwd)"/DATA/RAW/dpsg2020-06-00483/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00483/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_6N3B-SUHX_20200630/"
+
 processed_dir=$(pwd)"/DATA/PROCESSED/"
+
+find ${data_dir1} -type f -iname *.asc > ${processed_dir}/input_files;
+find ${data_dir2} -type f -iname *.asc >> ${processed_dir}/input_files;
 
 compute_base=false
 if [ ${compute_base} = 'true' ]
 then
     echo "Build VRT"
-    gdalbuildvrt "${processed_dir}"output.vrt -overwrite "${data_dir}"*.asc
+    gdalbuildvrt "${processed_dir}"output.vrt -overwrite -input_file_list ${processed_dir}/input_files; #"${data_dir1}"*.asc
     echo "Convert to GTiff"
     gdal_translate -of GTiff "${processed_dir}"output.vrt "${processed_dir}"output.tiff
     echo "Warp to WGS84"
