@@ -38,68 +38,71 @@ fi
 #west="6:10:00E"
 #north="45:54:00N"
 #east="6:11:00E"
-
-if [ ${1} = "1" ]
+if [ $# -ne 1 ]
 then
-    #Zone 1
-    zone_dir="${processed_dir}ZONE${1}/"
-    north="45:57:00N" #11
-    south="45:45:00N" #11
-    west="6:07:00E" #4
-    east="6:12:00E" #4
-elif [ ${1} = "2" ]
-then
-    #Zone 2
-    zone_dir="${processed_dir}ZONE${1}/"
-    north="46:03:00N" #3
-    south="45:59:00N" #3
-    west="6:18:00E" #7
-    east="6:26:00E" #7
+    echo "Please, give the area number as an argument."
 else
-    echo "Wrong area!"
-fi
+    if [ ${1} = "1" ]
+    then
+        #Zone 1
+        zone_dir="${processed_dir}ZONE${1}/"
+        north="45:57:00N" #11
+        south="45:45:00N" #11
+        west="6:07:00E" #4
+        east="6:12:00E" #4
+    elif [ ${1} = "2" ]
+    then
+        #Zone 2
+        zone_dir="${processed_dir}ZONE${1}/"
+        north="46:03:00N" #3
+        south="45:59:00N" #3
+        west="6:18:00E" #7
+        east="6:26:00E" #7
+    else
+        echo "Wrong area!"
+    fi
 
-echo "Processing zone ${1}..."
-mkdir -p ${zone_dir}
+    echo "Processing zone ${1}..."
+    mkdir -p ${zone_dir}
 
-#Computing decimal coordinates of the 4 bbox corners:
-tl_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${west}")
-tr_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${east}")
-bl_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${west}")
-br_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${east}")
+    #Computing decimal coordinates of the 4 bbox corners:
+    tl_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${west}")
+    tr_bbox=$(GeoConvert -g -w -p 4 --input-string "${north} ${east}")
+    bl_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${west}")
+    br_bbox=$(GeoConvert -g -w -p 4 --input-string "${south} ${east}")
 
-# Computing chunks:
-IFS=' '
-deltas=$(GeoConvert -g -p 4 -w --input-string "${north}-${south} ${east}-${west}")
-read -r -a array <<< "${deltas}"
-dWE=${array[0]}
-dSN=${array[1]}
-echo "deltas: ${dWE} ${DSN}"
-x_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dWE} - 1"))
-y_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dSN} - 1"))
+    # Computing chunks:
+    IFS=' '
+    deltas=$(GeoConvert -g -p 4 -w --input-string "${north}-${south} ${east}-${west}")
+    read -r -a array <<< "${deltas}"
+    dWE=${array[0]}
+    dSN=${array[1]}
+    echo "deltas: ${dWE} ${DSN}"
+    x_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dWE} - 1"))
+    y_step_max=$(printf "%1.f\n" $(bc -l <<< "60 * ${dSN} - 1"))
 
-# north axis
-for (( y=0; y<=${y_step_max}; y++ )); do 
-    ybl="+0:${y}:0"; #
-    ytr="+0:$((y+1)):0"; #
-    # east axis
-    for (( x=0; x<=${x_step_max}; x++ )); do 
-        xbl="+0:${x}:0"; #
-        xtr="+0:$((x+1)):0"; #
-        bl=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xbl}") #
-        tr=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xtr}") #
-        tl=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xbl}")
-        br=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xtr}")
-        bbox=${bl}" "${tr}
-        bbox_str=$(echo ${bl}"_"${tr} | sed "s/ /_/g")
-        bbox_str2=$(echo ${tl}"_"${br} | sed "s/ /_/g")
-        echo "Tiling sub-bbox: ${bbox}..."
-        echo "${zone_dir}"output_4326_"${bbox_str}".tiff
-        echo "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
-        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
-        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
+    # north axis
+    for (( y=0; y<=${y_step_max}; y++ )); do 
+        ybl="+0:${y}:0"; #
+        ytr="+0:$((y+1)):0"; #
+        # east axis
+        for (( x=0; x<=${x_step_max}; x++ )); do 
+            xbl="+0:${x}:0"; #
+            xtr="+0:$((x+1)):0"; #
+            bl=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xbl}") #
+            tr=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xtr}") #
+            tl=$(GeoConvert -g -p 4 -w --input-string "${south}${ytr} ${west}${xbl}")
+            br=$(GeoConvert -g -p 4 -w --input-string "${south}${ybl} ${west}${xtr}")
+            bbox=${bl}" "${tr}
+            bbox_str=$(echo ${bl}"_"${tr} | sed "s/ /_/g")
+            bbox_str2=$(echo ${tl}"_"${br} | sed "s/ /_/g")
+            echo "Tiling sub-bbox: ${bbox}..."
+            echo "${zone_dir}"output_4326_"${bbox_str}".tiff
+            echo "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
+            gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
+            gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
+        done
     done
-done
 
 #echo "Tiling..."
 #gdalwarp -overwrite -te ${bbox} "${processed_dir}"output_4326.tiff "${processed_dir}"output_4326_1.tiff
