@@ -89,12 +89,12 @@ for (( y=0; y<=${y_step_max}; y++ )); do
         bbox_str=$(echo ${bl}"_"${tr} | sed "s/ /_/g")
         bbox_str2=$(echo ${tl}"_"${br} | sed "s/ /_/g")
         tl_dms=$(GeoConvert -: -p -1 -w --input-string "${tl}")
-        bbox_str3=
+        bbox_str3=$(echo ${tl_dms} | sed "s/ /_/g" | sed "s/:/\./g")
         echo "Tiling sub-bbox: ${bbox}..."
         echo "${zone_dir}"output_4326_"${bbox_str}".tiff
         echo "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
         gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
-        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
+        gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}2/"output_4326_"${bbox_str3}".tiff
     done
 done
 
