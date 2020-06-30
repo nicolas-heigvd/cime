@@ -5,14 +5,16 @@ data_dir2=$(pwd)"/DATA/RAW/dpsg2020-06-00483/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2
 
 processed_dir=$(pwd)"/DATA/PROCESSED/"
 
-find ${data_dir1} -type f -iname *.asc > ${processed_dir}/input_files;
-find ${data_dir2} -type f -iname *.asc >> ${processed_dir}/input_files;
+> ${processed_dir}input_files;
+> ${processed_dir}output.vrt;
+find ${data_dir1} -type f -iname *.asc > ${processed_dir}input_files;
+find ${data_dir2} -type f -iname *.asc >> ${processed_dir}input_files;
 
 compute_base=false
 if [ ${compute_base} = 'true' ]
 then
     echo "Build VRT"
-    gdalbuildvrt "${processed_dir}"output.vrt -overwrite -input_file_list ${processed_dir}/input_files; #"${data_dir1}"*.asc
+    gdalbuildvrt "${processed_dir}"output.vrt -overwrite -input_file_list ${processed_dir}input_files; #"${data_dir1}"*.asc
     echo "Convert to GTiff"
     gdal_translate -of GTiff "${processed_dir}"output.vrt "${processed_dir}"output.tiff
     echo "Warp to WGS84"
