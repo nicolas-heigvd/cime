@@ -5,6 +5,9 @@ data_dir2=$(pwd)"/DATA/RAW/dpsg2020-06-00483/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2
 
 processed_dir=$(pwd)"/DATA/PROCESSED/"
 
+rm -rf $(pwd)/DATA/PROCESSED/ZONE?/*.tiff;
+rm -rf $(pwd)/DATA/PROCESSED/ZONE?/OBJ/*.obj;
+
 > ${processed_dir}input_files;
 > ${processed_dir}output.vrt;
 find ${data_dir1} -type f -iname *.asc > ${processed_dir}input_files;
