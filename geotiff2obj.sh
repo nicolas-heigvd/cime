@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $(pwd)"/.env"
+
 if [ $# -ne 1 ]
 then
     echo "Please, give the area number as an argument."
