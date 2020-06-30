@@ -105,6 +105,7 @@ else
             gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"tile_WGS84_"${bbox_str3}".tiff
         done
     done
+fi
 
 #echo "Tiling..."
 #gdalwarp -overwrite -te ${bbox} "${processed_dir}"output_4326.tiff "${processed_dir}"output_4326_1.tiff
