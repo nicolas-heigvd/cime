@@ -1,22 +1,19 @@
 #!/bin/bash
+
+compute_base=true
+
+data_dir1=$(pwd)"/DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
+data_dir2=$(pwd)"/DATA/RAW/dpsg2020-06-00483/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00483/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_6N3B-SUHX_20200630/"
+
+processed_dir=$(pwd)"/DATA/PROCESSED/"
+
 if [ $# -eq 0 ]
 then
-    compute_base=true
-
-    data_dir1=$(pwd)"/DATA/RAW/dpsg2020-06-00359/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00359/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_RTTK-G4T7_20200623/"
-    data_dir2=$(pwd)"/DATA/RAW/dpsg2020-06-00483/ddExt/RGEALTI/1_DONNEES_LIVRAISON_2020-06-00483/RGEALTI_MNT_1M_ASC_LAMB93_IGN69_6N3B-SUHX_20200630/"
-
-    processed_dir=$(pwd)"/DATA/PROCESSED/"
-
-    rm -rf $(pwd)/DATA/PROCESSED/ZONE?/*.tiff;
-    rm -rf $(pwd)/DATA/PROCESSED/ZONE?/OBJ/*.obj;
-
     > ${processed_dir}input_files;
     > ${processed_dir}output.vrt;
     find ${data_dir1} -type f -iname *.asc > ${processed_dir}input_files;
     find ${data_dir2} -type f -iname *.asc >> ${processed_dir}input_files;
 
-    compute_base=false
     if [ ${compute_base} = 'true' ]
     then
         echo "Build VRT"
@@ -67,6 +64,8 @@ else
     fi
 
     echo "Processing zone ${1}..."
+    rm -rf ${processed_dir}ZONE${1}/*.tiff;
+    rm -rf ${processed_dir}ZONE${1}/OBJ/*.obj;
     mkdir -p ${zone_dir}
 
     #Computing decimal coordinates of the 4 bbox corners:
