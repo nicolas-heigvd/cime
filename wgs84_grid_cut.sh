@@ -7,7 +7,7 @@ processed_dir=$(pwd)"/DATA/PROCESSED/"
 
 if [ $# -eq 0 ]
 then
-    compute_base=true
+    compute_base=${COMPUTE_BASE}
 
     > ${processed_dir}input_files;
     > ${processed_dir}output.vrt;
@@ -104,8 +104,8 @@ else
             echo "Tiling sub-bbox: ${bbox}..."
             #echo "${zone_dir}"output_4326_"${bbox_str}".tiff
             echo "${zone_dir}"tile_WGS84_"${bbox_str3}".tiff
-            #gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"output_4326_"${bbox_str}".tiff
-            gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"tile_WGS84_"${bbox_str3}".tiff
+            #gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"${PREFIX}"${bbox_str}".tiff
+            gdalwarp -overwrite -te ${bbox} -tr 0.00001 -0.00001 "${processed_dir}"output_4326.tiff "${zone_dir}"${PREFIX}"${bbox_str3}".tiff
         done
     done
 fi
