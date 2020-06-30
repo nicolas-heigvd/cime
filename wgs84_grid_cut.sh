@@ -88,6 +88,8 @@ for (( y=0; y<=${y_step_max}; y++ )); do
         bbox=${bl}" "${tr}
         bbox_str=$(echo ${bl}"_"${tr} | sed "s/ /_/g")
         bbox_str2=$(echo ${tl}"_"${br} | sed "s/ /_/g")
+        tl_dms=$(GeoConvert -: -p -1 -w --input-string "${tl}")
+        bbox_str3=
         echo "Tiling sub-bbox: ${bbox}..."
         echo "${zone_dir}"output_4326_"${bbox_str}".tiff
         echo "${zone_dir}2/"output_4326_"${bbox_str2}".tiff
