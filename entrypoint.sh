@@ -3,6 +3,9 @@
 echo "Entered /data/entrypoint.sh";
 echo $(pwd);
 
+echo "Data preprocessing...";
+/bin/bash ./wgs84_grid_cut.sh;
+
 echo "Cutting operation in zone 1...";
 /bin/bash ./wgs84_grid_cut.sh 1;
 echo "Cutting operation in zone 2...";
